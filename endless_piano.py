@@ -254,7 +254,7 @@ for i in range(len(chords_list)):
     t, m, c = TMIDI.Optimus_MIDI_TXT_Processor(full_path_to_custom_MIDI_file, MIDI_patch=range(127), MIDI_channel=-1)
   
   else:
-    while len(m) < 2: m = chords_list_f[secrets.randbelow(len(chords_list_f))]
+    m = chords_list_f[secrets.randbelow(len(chords_list_f))][0]
 
   for i in range(0, len(m)):
     for c in chords_list:
@@ -276,8 +276,12 @@ for i in range(len(chords_list)):
                 if len(song) > desired_number_of_notes: break
 
                 break
+      except KeyboardInterrupt:
+        break
+      
       except:
-        pass
+        print('Error...Skipping...')
+        continue
 
     if len(song) > desired_number_of_notes: break
   if len(song) > desired_number_of_notes: break
