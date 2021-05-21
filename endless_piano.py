@@ -208,7 +208,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 #@title Generate endless Piano performance music
 desired_number_of_notes = 200 #@param {type:"slider", min:50, max:500, step:50}
-full_path_to_custom_MIDI_file = "/content/All_out_of_love.mid" #@param {type:"string"}
+full_path_to_custom_MIDI_file = "" #@param {type:"string"}
 invert_chords_onsets = False #@param {type:"boolean"}
 
 print('=' * 50)
