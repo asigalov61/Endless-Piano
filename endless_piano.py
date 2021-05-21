@@ -209,9 +209,9 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@title Generate endless Piano performance music
 desired_number_of_notes = 200 #@param {type:"slider", min:50, max:500, step:50}
 full_path_to_custom_MIDI_file = "" #@param {type:"string"}
-match_coefficient = 10 #@param {type:"slider", min:1, max:20, step:1}
+match_coefficient = 15 #@param {type:"slider", min:1, max:20, step:1}
 invert_chords_onsets = False #@param {type:"boolean"}
-randomize_dataset = False #@param {type:"boolean"}
+randomize_dataset = True #@param {type:"boolean"}
 
 print('=' * 50)
 print('Endless Piano')
@@ -251,13 +251,13 @@ for i in range(len(chords_list)):
   song.extend(chords_list[secrets.randbelow(len(chords_list))])
 
   if full_path_to_custom_MIDI_file != '':
-    t, m, c = TMIDI.Optimus_MIDI_TXT_Processor('/content/USSR.mid', MIDI_patch=range(127), MIDI_channel=-1)
+    t, m, c = TMIDI.Optimus_MIDI_TXT_Processor(full_path_to_custom_MIDI_file, MIDI_patch=range(127), MIDI_channel=-1)
   
   else:
     m = chords_list_f[i][0]
     pass
 
-  for mm in m:
+  for i in range(0, len(m)):
     for c in chords_list:
       
       if invert_chords_onsets:
@@ -265,10 +265,10 @@ for i in range(len(chords_list)):
       else:
         onset = 0
       
-      if c[onset][4] == mm[4]:
+      if c[onset][4] == m[i][4]:
         d = match_coefficient
-        if int(c[onset][2] / d) == int(mm[2] / d):
-          if int(c[onset][5] / d) == int(mm[5] / d):
+        if int(c[onset][2] / d) == int(m[i][2] / d):
+          if int(c[onset][5] / d) == int(m[i][5] / d):
             if secrets.randbelow(2): 
               
               song.extend(c)
