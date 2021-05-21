@@ -1,4 +1,4 @@
-# Endless-Piano
+# Endless Piano
 
 ***
 
@@ -6,7 +6,7 @@
 
 ***
 
-### Try Endless-Piano quickly and freely in Google Colab:
+### Try Endless Piano quickly and freely in Google Colab:
 
 [![Open In Colab][colab-badge]][colab-notebook]
 
