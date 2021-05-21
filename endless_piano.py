@@ -209,7 +209,9 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@title Generate endless Piano performance music
 desired_number_of_notes = 200 #@param {type:"slider", min:50, max:500, step:50}
 full_path_to_custom_MIDI_file = "" #@param {type:"string"}
+match_coefficient = 20 #@param {type:"slider", min:1, max:20, step:1}
 invert_chords_onsets = False #@param {type:"boolean"}
+randomize_dataset = False #@param {type:"boolean"}
 
 print('=' * 50)
 print('Endless Piano')
@@ -221,11 +223,13 @@ chords_list = []
 for c in chords_list_f:
   for cc in c:
     chords_list.append(cc)
+    
 print('=' * 50)
 
-print('Re-randomizing for freshness... :)')
-random.shuffle(chords_list)
-print('=' * 50)
+if randomize_dataset:
+  print('Re-randomizing for freshness... :)')
+  random.shuffle(chords_list)
+  print('=' * 50)
 
 if full_path_to_custom_MIDI_file != '':
   print('Loading custom MIDI...')
@@ -262,13 +266,13 @@ for i in range(len(chords_list)):
         onset = 0
       
       if c[onset][4] == mm[4]:
-        d = 10
+        d = match_coefficient
         if int(c[onset][2] / d) == int(mm[2] / d):
           if int(c[onset][5] / d) == int(mm[5] / d):
             if secrets.randbelow(2): 
               
               song.extend(c)
-              if secrets.randbelow(20) == 0: print('Generated:' , len(song), 'notes')
+              if secrets.randbelow(10) == 0: print('Generated:' , len(song), 'notes')
               break
   
   if len(song) > desired_number_of_notes:
