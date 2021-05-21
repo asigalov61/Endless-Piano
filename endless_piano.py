@@ -273,11 +273,14 @@ for i in range(len(chords_list)):
               
               song.extend(c)
               if secrets.randbelow(10) == 0: print('Generated:' , len(song), 'notes')
+              if len(song) > desired_number_of_notes: break
+
               break
-  
-  if len(song) > desired_number_of_notes:
-  
-    break
+    
+    if len(song) > desired_number_of_notes: break
+  if len(song) > desired_number_of_notes: break
+
+        
     
 print('Done!')
 print('=' * 50)
