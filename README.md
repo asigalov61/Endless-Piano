@@ -2,7 +2,7 @@
 
 ***
 
-## Endless Semi-Generative Performance Piano Music Generator
+## Endless Melody-Conditioned Semi-Generative Performance Piano Music Generator
 
 ***
 
