@@ -208,7 +208,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 #@title Generate endless Piano performance music
 desired_number_of_notes = 200 #@param {type:"slider", min:50, max:500, step:50}
-full_path_to_custom_MIDI_file = "" #@param {type:"string"}
+full_path_to_custom_MIDI_file = "/content/All_out_of_love.mid" #@param {type:"string"}
 invert_chords_onsets = False #@param {type:"boolean"}
 
 print('=' * 50)
@@ -234,6 +234,7 @@ if full_path_to_custom_MIDI_file != '':
 
 else:
   print('Using randomly selected melody from the dataset')
+  print('=' * 50)
 
 print('Generating...')
 
@@ -246,7 +247,8 @@ for i in range(len(chords_list)):
   song.extend(chords_list[secrets.randbelow(len(chords_list))])
 
   if full_path_to_custom_MIDI_file != '':
-    t, m, c = TMIDI.Optimus_MIDI_TXT_Processor('/content/USSR.mid')
+    t, m, c = TMIDI.Optimus_MIDI_TXT_Processor('/content/USSR.mid', MIDI_patch=range(127), MIDI_channel=-1)
+  
   else:
     m = chords_list_f[i][0]
     pass
