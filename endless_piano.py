@@ -209,7 +209,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@title Generate endless Piano performance music
 desired_number_of_notes = 200 #@param {type:"slider", min:50, max:500, step:50}
 full_path_to_custom_MIDI_file = "" #@param {type:"string"}
-match_coefficient = 20 #@param {type:"slider", min:1, max:20, step:1}
+match_coefficient = 10 #@param {type:"slider", min:1, max:20, step:1}
 invert_chords_onsets = False #@param {type:"boolean"}
 randomize_dataset = False #@param {type:"boolean"}
 
@@ -285,7 +285,7 @@ print('=' * 50)
 print('Final notes count:', len(song))
 print('=' * 50)
 
-stats = TMIDI.Tegridy_SONG_to_MIDI_Converter(TMIDI.Tegridy_Timings_Converter(song)[0], output_file_name='/content/Endless-Piano-Music-Composition', list_of_MIDI_patches=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], track_name='Endless Piano Composition')
+stats = TMIDI.Tegridy_SONG_to_MIDI_Converter(TMIDI.Tegridy_Timings_Converter(song, fixed_start_time=100)[0], output_file_name='/content/Endless-Piano-Music-Composition', list_of_MIDI_patches=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], track_name='Endless Piano Composition',)
 
 """# Plot and Listen"""
 
