@@ -10,7 +10,7 @@
 
 [![Open In Colab][colab-badge]][colab-notebook]
 
-[colab-notebook]: <https://colab.research.google.com/github/asigalov61/Endless-Piano/blob/main/Endless_Piano.ipynb.ipynb>
+[colab-notebook]: <https://colab.research.google.com/github/asigalov61/Endless-Piano/blob/main/Endless_Piano.ipynb>
 [colab-badge]: <https://colab.research.google.com/assets/colab-badge.svg>
 
 ***
