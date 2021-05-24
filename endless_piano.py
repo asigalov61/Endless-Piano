@@ -229,7 +229,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@markdown NOTE: There is nothing to tune or adjust. The process is fully random and automatic. Just re-run the generator to generate new compositions :)
 
 #@markdown NOTE: If nothing is being generated or if the song is too short: re-run the generator.
-number_of_chord_pairs_to_generate = 400 #@param {type:"slider", min:50, max:10000, step:50}
+number_of_chord_pairs_to_generate = 200 #@param {type:"slider", min:50, max:500, step:50}
 
 song = []
 qp_idx = 0
@@ -288,10 +288,11 @@ for r in auto.tqdm(range(number_of_chord_pairs_to_generate)):
   try:
     song = []
     for i in range(len(quarter_pairs)):
+
       
         seed = quarter_pairs[qp_idx]
         
-        for q in quarter_pairs:
+        for q in quarter_pairs[:secrets.randbelow(len(quarter_pairs))]:
             
             seed1 = [y[2:] for y in seed[1]]
             q1 = [y[2:] for y in q[0]]
