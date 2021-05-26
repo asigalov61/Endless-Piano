@@ -14,7 +14,7 @@ Original file is located at
 
 ***
 
-### Powered by tegridy-tools TMIDI
+### Powered by tegridy-tools TMIDI & GiantMIDI Dataset https://github.com/bytedance/GiantMIDI-Piano
 
 ***
 
