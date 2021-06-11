@@ -260,7 +260,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
 overlap_notes = 3 #@param {type:"slider", min:0, max:10, step:1}
-slices_match_type = "pitches_durations_velocities_beat_and_channel" #@param ["pitches_only", "pitches_and_durations", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
+slices_match_type = "pitches_durations_and_velocities" #@param ["pitches_only", "pitches_and_durations", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
 
 print('=' * 70)
 print('Endless Piano')
@@ -324,7 +324,7 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                 break
           
           if slices_match_type == 'pitches_durations_and_velocities':
-            if p1 == p2 and d1 == d2 and v1 == v2 and dtd1 == dtd2:
+            if p1 == p2 and d1 == d2 and v1 == v2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
                 print('Found', c, 'slices...')
