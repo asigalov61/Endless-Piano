@@ -65,7 +65,7 @@ print('Loading complete. Enjoy! :)')
 
 #@markdown NOTE: This may take a while. Please wait...
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
-overlap_notes_per_slice = 2 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes_per_slice = 3 #@param {type:"slider", min:0, max:10, step:1}
 
 print('=' * 50) 
 print('Loading GiantMIDI...')
@@ -103,7 +103,7 @@ melody_pitch_baseline = 60 #@param {type:"slider", min:1, max:127, step:1}
 time_denominator = 1 #@param {type:"slider", min:1, max:20, step:1}
 chars_encoding_offset = 33 #@param {type:"number"}
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
-overlap_notes_per_slice = 2 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes_per_slice = 3 #@param {type:"slider", min:0, max:10, step:1}
 perfect_timings = True #@param {type:"boolean"}
 
 print('=' * 70)
@@ -240,13 +240,11 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 #@markdown NOTE: If nothing is being generated or if the song is too short: re-run the generator.
 
-#@markdown NOTE: Generator's overlap notes count must match dataset overlap notes count.
-
 #@markdown NOTE: Broader slices match types == slower/more plagiarized output, so you will need to find just the right settings for your dataset and output preferences.
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
-overlap_notes = 2 #@param {type:"slider", min:0, max:10, step:1}
 slices_match_type = "pitches_and_beat" #@param ["pitches_only", "pitches_and_durations", "pitches_and_beat", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
+overlap_notes = overlap_notes_per_slice
 
 print('=' * 70)
 print('Endless Piano')
@@ -261,6 +259,7 @@ random.shuffle(quarter_pairs)
 print('=' * 70)
 
 print('Starting search...')
+print('Slices matching type:', slices_match_type)
 print('=' * 70)
 
 c = 2
