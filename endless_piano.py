@@ -278,8 +278,10 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
     d1 = [int(y[2] / 128) for y in song[-1][-overlap_notes:]]
     ch1 = [int(y[3]) for y in song[-1][-overlap_notes:]]
     v1 = [int(y[5]) for y in song[-1][-overlap_notes:]]
+    
     tds1 = [abs(song[-1][-overlap_notes:][i-1][1]-song[-1][-overlap_notes:][i][1]) for i in range(1, len(song[-1][-overlap_notes:]))]
-    atds1 = int(sum(tds1) / len(tds1))
+    if len(tds1) != 0: atds1 = int(sum(tds1) / len(tds1))
+    
     for qp in quarter_pairs:
 
           p2 = [y[4] for y in qp[:overlap_notes]]
@@ -287,11 +289,9 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
           v2 = [int(y[5]) for y in qp[:overlap_notes]]
           ch2 = [int(y[3]) for y in qp[:overlap_notes]]
           
-          try:
-            tds2 = [abs(qp[:overlap_notes][i-1][1]-qp[:overlap_notes][i][1]) for i in range(1, len(qp[:overlap_notes]))]
-            atds2 = int(sum(tds2) / len(tds2))
-          except:
-            continue
+          tds2 = [abs(qp[:overlap_notes][i-1][1]-qp[:overlap_notes][i][1]) for i in range(1, len(qp[:overlap_notes]))]
+          if len(tds2) != 0: atds2 = int(sum(tds2) / len(tds2))
+
 
           if slices_match_type == 'pitches_only':
             if p1 == p2:
