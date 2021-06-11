@@ -70,6 +70,7 @@ print('Loading complete. Enjoy! :)')
 
 #@markdown NOTE: This may take a while. Please wait...
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
+overlap_notes_per_slice = 3 #@param {type:"slider", min:0, max:10, step:1}
 
 print('=' * 50) 
 print('Loading GiantMIDI...')
@@ -85,7 +86,7 @@ print('=' * 50)
 print('Slicing the dataset...')
 quarter_pairs = []
 for qp in auto.tqdm(quarter_pairs1[0]):
-  quarter_pairs.extend(TMIDI.Tegridy_Score_Slicer(qp, slices_length_in_miliseconds, overlap_notes=5)[0])
+  quarter_pairs.extend(TMIDI.Tegridy_Score_Slicer(qp, slices_length_in_miliseconds, overlap_notes=overlap_notes_per_slice)[0])
 print('Done!')
 print('=' * 50)
 
@@ -242,7 +243,7 @@ random.shuffle(chords_list_f)
 print('Slicing dataset...')
 quarter_pairs = []
 for d in auto.tqdm(chords_list_f):
-  quarter_pairs.extend(TMIDI.Tegridy_Score_Slicer(d, slices_length_in_miliseconds)[0])
+  quarter_pairs.extend(TMIDI.Tegridy_Score_Slicer(d, slices_length_in_miliseconds, overlap_notes=overlap_notes_per_slice)[0])
 
 print('Generating slices match signatures...')
 signatures = []
@@ -257,7 +258,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 """# Generate Endless Classical Piano Music"""
 
-#@title Generate Music with the Fuzzy Matching
+#@title Generate Music with the Score Slices Fuzzy Matching
 
 #@markdown NOTE: If nothing is being generated or if the song is too short: re-run the generator.
 
@@ -267,7 +268,7 @@ number_of_slices_to_try_to_generate = 10 #@param {type:"slider", min:1, max:20, 
 
 slices_averages_multiplier = 0.1 #@param {type:"slider", min:0, max:1, step:0.05}
 slices_sums_multiplier = 0.001 #@param {type:"slider", min:0, max:0.01, step:0.001}
-overlap_notes = 5 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes = 3 #@param {type:"slider", min:0, max:10, step:1}
 
 print('=' * 100)
 print('Endless Piano')
@@ -360,14 +361,14 @@ if c >= i + 1:
                                               track_name='Composition #:' + str(comp_numb) + '-' + str(comp_length))
   print('=' * 100)
 
-#@title Generate Music with Overlapping Score Slices
+#@title Generate Music with the Matching Overlapping Score Slices
 
 #@markdown NOTE: If nothing is being generated or if the song is too short: re-run the generator.
 
 #@markdown NOTE: Overlap notes count should match dataset overlap notes count
 
 number_of_slices_to_try_to_generate = 10 #@param {type:"slider", min:1, max:20, step:1}
-overlap_notes = 5 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes = 3 #@param {type:"slider", min:0, max:10, step:1}
 
 print('=' * 100)
 print('Endless Piano')
@@ -385,8 +386,8 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
 
   for qp in quarter_pairs:
 
-      s1 = [y[4:] for y in song[-1][-overlap_notes:]]
-      s2 = [y[4:] for y in qp[:overlap_notes]]
+      s1 = [y[2:] for y in song[-1][-overlap_notes:]]
+      s2 = [y[2:] for y in qp[:overlap_notes]]
       
       if s1 == s2:
         if qp[overlap_notes:] not in song:
