@@ -243,7 +243,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@markdown NOTE: Broader slices match types == slower/more plagiarized output, so you will need to find just the right settings for your dataset and output preferences.
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
-slices_match_type = "pitches_and_beat" #@param ["pitches_only", "pitches_and_durations", "pitches_and_beat", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
+slices_match_type = "pitches_durations_and_beat" #@param ["pitches_only", "pitches_and_durations", "pitches_and_beat", "pitches_durations_and_beat", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
 overlap_notes = overlap_notes_per_slice
 
 print('=' * 70)
@@ -330,7 +330,16 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                 print('Found', c, 'slices /', total_notes, 'notes...')
                 c += 1
                 break
-
+          
+          if slices_match_type == 'pitches_durations_and_beat':
+            if p1 == p2 and d1 == d2 and dtd1 == dtd2:
+              if qp[overlap_notes:] not in song:            
+                song.append(qp[overlap_notes:])
+                total_notes += len(song[-1])
+                print('Found', c, 'slices /', total_notes, 'notes...')
+                c += 1
+                break
+          
           if slices_match_type == 'pitches_durations_velocities_and_beat':
             if p1 == p2 and d1 == d2 and v1 == v2 and dtd1 == dtd2:
               if qp[overlap_notes:] not in song:            
