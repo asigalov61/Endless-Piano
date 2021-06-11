@@ -95,7 +95,7 @@ print('=' * 50)
 
 """# (OPTIONAL) Process your own dataset"""
 
-#@title Process MIDIs to special MIDI dataset with Tegridy MIDI Processor
+#@title Process MIDIs to special MIDI dataset with Optimus MIDI Processor
 
 desired_dataset_name = "Endless-Piano-Music-Dataset" #@param {type:"string"}
 file_name_to_output_dataset_to = "/content/Endless-Piano-Music-Dataset" #@param {type:"string"}
@@ -109,9 +109,12 @@ time_denominator = 1 #@param {type:"slider", min:1, max:20, step:1}
 chars_encoding_offset = 33 #@param {type:"number"}
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
 overlap_notes_per_slice = 2 #@param {type:"slider", min:0, max:10, step:1}
+perfect_timings = True #@param {type:"boolean"}
 
-print('TMIDI Processor')
+print('=' * 70)
+print('TMIDI Optimus Processor')
 print('Starting up...')
+print('=' * 70)
 
 ###########
 
@@ -146,6 +149,7 @@ os.chdir(dataset_addr)
 filez = list()
 for (dirpath, dirnames, filenames) in os.walk(dataset_addr):
     filez += [os.path.join(dirpath, file) for file in filenames]
+print('=' * 70)
 
 # Stamping the dataset
 print('Stamping the dataset...')
@@ -158,21 +162,22 @@ if encode_velocities:
 if encode_MIDI_channels:
   TXT_String += '-CHA'
 TXT_String += chr(10)
+
 pf = []
 kar_ev = []
 pxp_ev = []
+
+print('=' * 70)
+
 print('Processing MIDI files. Please wait...')
+
 for f in tqdm.auto.tqdm(filez):
   try:
     fn = os.path.basename(f)
 
     fnn = fn
     fn1 = fnn.split('.')[0]
-    fn3 = ['Unknown']
-
-    #fn2 = fn.split('.')[0]
-    #fn3 = lakh[str(fn2)]
-    #fn1 = fn3[0].split('.')[-2].split('/')[-1]
+    fn3 = ['MIDI']
 
     TXT, melody, chords = TMIDI.Optimus_MIDI_TXT_Processor(f, 
                                                            line_by_line_output=False, 
@@ -186,12 +191,12 @@ for f in tqdm.auto.tqdm(filez):
                                                            melody_conditioned_encoding=melody_conditioned_encoding,
                                                            melody_pitch_baseline=melody_pitch_baseline,
                                                            song_name=fn1, 
-                                                           perfect_timings=True)
+                                                           perfect_timings=perfect_timings)
     chords_list_f.append(chords)
 
     melody_list_f.append(melody)
 
-    pf.append([fn1, f.split('/')[-2], f.replace('/content/Dataset/','/LAKH/clean_midi/')])
+    pf.append([fn1, f.split('/')[-2], fn3])
 
 
     files_count += 1
@@ -207,45 +212,31 @@ for f in tqdm.auto.tqdm(filez):
     
     continue
 
-#print('Stamping total number of songs...')
-#TXT_String += 'TOTAL_SONGS_COUNT=' + str(files_count)
+print('Task complete! :)')
+print('=' * 70)
 
-print('Task complete :)')
-print('==================================================')
-#print('Number of processed dataset MIDI files:', files_count)
-#print('Number of MIDI chords recorded:', len(chords_list_f))
-#print('First chord event:', chords_list_f[0], 'Last chord event:', chords_list_f[-1]) 
-#print('Number of recorded melody events:', len(melody_list_f))
-#print('First melody event:', melody_list_f[0], 'Last Melody event:', melody_list_f[-1])
-#print('Total number of MIDI events recorded:', len(chords_list_f) + len(melody_list_f))
-
-# Writing dataset to TXT file
-#print('Writing dataset to TXT file...')
-#with open(file_name_to_output_dataset_to + '.txt', 'wb') as f:
-  #f.write(TXT_String.encode('utf-8', 'replace'))
-  #f.close
+print('Number of processed dataset MIDI files:', files_count)
+print('First chord event:', chords_list_f[0][0], 'Last chord event:', chords_list_f[-1][-1]) 
+print('First melody event:', melody_list_f[0][0], 'Last Melody event:', melody_list_f[-1][-1])
+print('=' * 70)
 
 # Dataset
 print('Finalizing the dataset...')
 MusicDataset = [chords_list_f, melody_list_f, kar_ev, filez, pf, bf, files_count]
+print('=' * 70)
 
-print('Randomizing dataset...')
+print('Randomizing the dataset...')
 random.shuffle(chords_list_f)
+print('=' * 70)
 
-print('Slicing dataset...')
+quarter_pairs1 = [chords_list_f]
+
+print('Slicing the dataset...')
 quarter_pairs = []
-for d in auto.tqdm(chords_list_f):
+for d in auto.tqdm(quarter_pairs1[0]):
   quarter_pairs.extend(TMIDI.Tegridy_Score_Slicer(d, slices_length_in_miliseconds, overlap_notes=overlap_notes_per_slice)[0])
+print('=' * 70)
 
-print('Generating slices match signatures...')
-signatures = []
-for qp in auto.tqdm(quarter_pairs):
-  x = TMIDI.Tegridy_MIDI_Signature(qp, qp)[1]
-  y = [x[2], x[3], x[6], x[7], x[8], x[9]]
-  signatures.append(y)
-print('=' * 50)
-
-print('Done! Enjoy!')
 TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 """# Generate Endless Classical Piano Music"""
@@ -260,7 +251,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
 overlap_notes = 2 #@param {type:"slider", min:0, max:10, step:1}
-slices_match_type = "pitches_durations_and_velocities" #@param ["pitches_only", "pitches_and_durations", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
+slices_match_type = "pitches_and_durations" #@param ["pitches_only", "pitches_and_durations", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
 
 print('=' * 70)
 print('Endless Piano')
