@@ -243,7 +243,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@markdown NOTE: Broader slices match types == slower/more plagiarized output, so you will need to find just the right settings for your dataset and output preferences.
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
-slices_match_type = "pitches_durations_and_beat" #@param ["pitches_only", "pitches_and_durations", "pitches_and_beat", "pitches_durations_and_beat", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
+slices_match_type = "pitches_and_beat" #@param ["pitches_only", "pitches_and_durations", "pitches_and_beat", "pitches_durations_and_beat", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
 overlap_notes = overlap_notes_per_slice
 
 print('=' * 70)
@@ -278,23 +278,21 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
     d1 = [int(y[2] / 128) for y in song[-1][-overlap_notes:]]
     ch1 = [int(y[3]) for y in song[-1][-overlap_notes:]]
     v1 = [int(y[5]) for y in song[-1][-overlap_notes:]]
-    dt1 = [int(y[1] / 128) for y in song[-1][-overlap_notes:]]
-
+    tds1 = [abs(song[-1][-overlap_notes:][i-1][1]-song[-1][-overlap_notes:][i][1]) for i in range(1, len(song[-1][-overlap_notes:]))]
+    atds1 = int(sum(tds1) / len(tds1))
     for qp in quarter_pairs:
 
           p2 = [y[4] for y in qp[:overlap_notes]]
           d2 = [int(y[2] / 128) for y in qp[:overlap_notes]]
           v2 = [int(y[5]) for y in qp[:overlap_notes]]
           ch2 = [int(y[3]) for y in qp[:overlap_notes]]
-          dt2 = [int(y[1] / 128) for y in qp[:overlap_notes]]
           
           try:
-            dtd1 = abs(dt1[0] - dt1[1])
-            dtd2 = abs(dt2[0] - dt2[1])
-          
+            tds2 = [abs(qp[:overlap_notes][i-1][1]-qp[:overlap_notes][i][1]) for i in range(1, len(qp[:overlap_notes]))]
+            atds2 = int(sum(tds2) / len(tds2))
           except:
             continue
-          
+
           if slices_match_type == 'pitches_only':
             if p1 == p2:
               if qp[overlap_notes:] not in song:            
@@ -314,7 +312,7 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                 break
 
           if slices_match_type == 'pitches_and_beat':
-            if p1 == p2 and dtd1 == dtd2:
+            if p1 == p2 and atds1 == atds2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
                 total_notes += len(song[-1])
@@ -332,7 +330,7 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                 break
           
           if slices_match_type == 'pitches_durations_and_beat':
-            if p1 == p2 and d1 == d2 and dtd1 == dtd2:
+            if p1 == p2 and d1 == d2 and atds1 == atds2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
                 total_notes += len(song[-1])
@@ -341,7 +339,7 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                 break
           
           if slices_match_type == 'pitches_durations_velocities_and_beat':
-            if p1 == p2 and d1 == d2 and v1 == v2 and dtd1 == dtd2:
+            if p1 == p2 and d1 == d2 and v1 == v2 and atds1 == atds2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
                 total_notes += len(song[-1])
@@ -350,7 +348,7 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                 break
 
           if slices_match_type == 'pitches_durations_velocities_beat_and_channel':
-            if p1 == p2 and d1 == d2 and v1 == v2 and dtd1 == dtd2 and ch1 == ch2:
+            if p1 == p2 and d1 == d2 and v1 == v2 and atds1 == atds2 and ch1 == ch2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
                 total_notes += len(song[-1])
