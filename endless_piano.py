@@ -70,7 +70,7 @@ print('Loading complete. Enjoy! :)')
 
 #@markdown NOTE: This may take a while. Please wait...
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
-overlap_notes_per_slice = 3 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes_per_slice = 5 #@param {type:"slider", min:0, max:10, step:1}
 
 print('=' * 50) 
 print('Loading GiantMIDI...')
@@ -87,15 +87,6 @@ print('Slicing the dataset...')
 quarter_pairs = []
 for qp in auto.tqdm(quarter_pairs1[0]):
   quarter_pairs.extend(TMIDI.Tegridy_Score_Slicer(qp, slices_length_in_miliseconds, overlap_notes=overlap_notes_per_slice)[0])
-print('Done!')
-print('=' * 50)
-
-print('Generating slices match signatures...')
-signatures = []
-for qp in auto.tqdm(quarter_pairs):
-  x = TMIDI.Tegridy_MIDI_Signature(qp, qp)[1]
-  y = [x[2], x[3], x[6], x[7], x[8], x[9]]
-  signatures.append(y)
 print('Done!')
 print('=' * 50)
 
@@ -117,6 +108,7 @@ melody_pitch_baseline = 60 #@param {type:"slider", min:1, max:127, step:1}
 time_denominator = 1 #@param {type:"slider", min:1, max:20, step:1}
 chars_encoding_offset = 33 #@param {type:"number"}
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
+overlap_notes_per_slice = 5 #@param {type:"slider", min:0, max:10, step:1}
 
 print('TMIDI Processor')
 print('Starting up...')
@@ -258,17 +250,15 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 """# Generate Endless Classical Piano Music"""
 
-#@title Generate Music with the Score Slices Fuzzy Matching
+#@title Generate with the Overlapping Score Slices Matching
 
 #@markdown NOTE: If nothing is being generated or if the song is too short: re-run the generator.
 
-#@markdown NOTE: If multipliers == 1 performs exact slices match, otherwise the matching is fuzzy based on provided multipliers.
+#@markdown NOTE: Overlap notes count should match dataset overlap notes count
 
-number_of_slices_to_try_to_generate = 10 #@param {type:"slider", min:1, max:20, step:1}
-
-slices_averages_multiplier = 0.1 #@param {type:"slider", min:0, max:1, step:0.05}
-slices_sums_multiplier = 0.001 #@param {type:"slider", min:0, max:0.01, step:0.001}
-overlap_notes = 3 #@param {type:"slider", min:0, max:10, step:1}
+number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
+overlap_notes = 5 #@param {type:"slider", min:0, max:10, step:1}
+slices_match_type = "pitches_durations_and_velocities" #@param ["pitches_only", "pitches_and_durations", "pitches_durations_and_velocities"]
 
 print('=' * 100)
 print('Endless Piano')
@@ -278,27 +268,49 @@ print('Starting search...')
 print('=' * 100)
 
 c = 1
-
-sig = signatures[secrets.randbelow(len(signatures))]
-
+idx = secrets.randbelow(len(quarter_pairs))
 song = []
-song.append(quarter_pairs[signatures.index(sig)])
+song.append(quarter_pairs[idx])
 
 for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
 
-  for s in signatures:
+  for qp in quarter_pairs:
 
-    div = slices_averages_multiplier
-    div2 = slices_sums_multiplier
-    s1 = [ int(sig[0] * div2), int(sig[1] * div),int(sig[2] * div2), int(sig[3] * div),int(sig[4] * div2), int(sig[5] * div)]
-    s2 = [ int(s[0] * div2), int(s[1] * div),int(s[2] * div2), int(s[3] * div),int(s[4] * div2), int(s[5] * div)]
-    if s1 == s2 and signatures.index(s) != signatures.index(sig):
-      if quarter_pairs[signatures.index(s)][overlap_notes:] not in song:
-        song.append(quarter_pairs[signatures.index(s)][overlap_notes:])
-        sig = signatures[signatures.index(s)]
-        print('Found', c, 'slices...')
-        c += 1
-        break
+        p1 = [y[4] for y in song[-1][-overlap_notes:]]
+        p2 = [y[4] for y in qp[:overlap_notes]]
+        
+        d1 = [int(y[2] / 128) for y in song[-1][-overlap_notes:]]
+        d2 = [int(y[2] / 128) for y in qp[:overlap_notes]]
+        
+        v1 = [int(y[5]) for y in song[-1][-overlap_notes:]]
+        v2 = [int(y[5]) for y in qp[:overlap_notes]]
+        
+
+
+        if slices_match_type == 'pitches_only':
+          if p1 == p2:
+            if qp[overlap_notes:] not in song:            
+              
+              song.append(qp[overlap_notes:])
+              print('Found', c, 'slices...')
+              c += 1
+              break
+        
+        if slices_match_type == 'pitches_and_durations':
+          if p1 == p2 and d1 == d2:
+            if qp[overlap_notes:] not in song:            
+              song.append(qp[overlap_notes:])
+              print('Found', c, 'slices...')
+              c += 1
+              break
+        
+        if slices_match_type == 'pitches_durations_and_velocities':
+          if p1 == p2 and d1 == d2 and v1 == v2:
+            if qp[overlap_notes:] not in song:            
+              song.append(qp[overlap_notes:])
+              print('Found', c, 'slices...')
+              c += 1
+              break  
   
   if c == i + 1:
     print('=' * 100)
@@ -343,115 +355,18 @@ if c >= i + 1:
   print('=' * 100)
 
   print('Recalculating songs timings...')
-  song = TMIDI.Tegridy_Timings_Converter(song2)[0]
+  song3 = TMIDI.Tegridy_Timings_Converter(song2)[0]
   print('=' * 100)
 
-  print('Total song length:', len(song))
+  print('Total song length:', len(song3))
   print('=' * 100)
 
-  comp_numb = sum([y[4] for y in song if y[0] == 'note'])
-  comp_length = len(song)
+  comp_numb = sum([y[4] for y in song3 if y[0] == 'note'])
+  comp_length = len(song3)
   print('Endless Piano Composition #:', comp_numb, '-', comp_length)
   print('=' * 100)
 
-  stats = TMIDI.Tegridy_SONG_to_MIDI_Converter(song,
-                                              output_signature='Endless Piano',
-                                              output_file_name='/content/Endless-Piano-Music-Composition', 
-                                              list_of_MIDI_patches=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
-                                              track_name='Composition #:' + str(comp_numb) + '-' + str(comp_length))
-  print('=' * 100)
-
-#@title Generate Music with the Matching Overlapping Score Slices
-
-#@markdown NOTE: If nothing is being generated or if the song is too short: re-run the generator.
-
-#@markdown NOTE: Overlap notes count should match dataset overlap notes count
-
-number_of_slices_to_try_to_generate = 10 #@param {type:"slider", min:1, max:20, step:1}
-overlap_notes = 3 #@param {type:"slider", min:0, max:10, step:1}
-
-print('=' * 100)
-print('Endless Piano')
-print('=' * 100)
-
-print('Starting search...')
-print('=' * 100)
-
-c = 1
-
-song = []
-song.append(quarter_pairs[secrets.randbelow(len(quarter_pairs))])
-
-for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
-
-  for qp in quarter_pairs:
-
-      s1 = [y[2:] for y in song[-1][-overlap_notes:]]
-      s2 = [y[2:] for y in qp[:overlap_notes]]
-      
-      if s1 == s2:
-        if qp[overlap_notes:] not in song:
-          song.append(qp[overlap_notes:])
-          
-          print('Found', c, 'slices...')
-          c += 1
-          break
-
-  if c == i + 1:
-    print('=' * 100)
-    print('Generator exhausted. Stopping...')
-    break
-
-print('=' * 100)
-
-if c >= i + 1:
-
-  print('Finalizing resulting song...')
-  print('=' * 100)
-  song1 = []
-  for s in song:
-    song1.extend(s)
-  song1 = [s for s in song1 if type(s) == list]
-
-  print('Analyzing generated song...')
-  ptime = 0
-  count = 1
-  ptime = song1[0][1]
-  for s in song1:
-    if abs(s[1] - ptime) > 1000:
-      count += 1
-    ptime = s[1]
-  print('Song has', count, 'unique pieces.')
-  if count < 2:
-    print('PLAGIARIZM WARNING: Your composition is most likely plagiarizm')
-  print('=' * 100)
-
-  print('Adding unique pieces labels to the song...')
-  song2 = []
-  ptime = song1[0][1]
-  song2.append(['text_event', song1[0][1], str(song1[0])])
-  for s in song1:
-    if abs(s[1] - ptime) > 1000:
-      song2.append(['text_event', s[1], str(s)])
-      song2.append(s)
-    else:
-      song2.append(s)
-    ptime = s[1]
-  print('=' * 100)
-
-  print('Recalculating songs timings...')
-  song = TMIDI.Tegridy_Timings_Converter(song2)[0]
-  print('=' * 100)
-
-  print('Total song length:', len(song))
-  print('=' * 100)
-
-  comp_numb = sum([y[4] for y in song if y[0] == 'note'])
-  comp_length = len(song)
-  print('Endless Piano Composition #:', comp_numb, '-', comp_length)
-  print('=' * 100)
-
-  stats = TMIDI.Tegridy_SONG_to_MIDI_Converter(song,
+  stats = TMIDI.Tegridy_SONG_to_MIDI_Converter(song3,
                                               output_signature='Endless Piano',
                                               output_file_name='/content/Endless-Piano-Music-Composition', 
                                               list_of_MIDI_patches=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 
