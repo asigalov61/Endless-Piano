@@ -246,7 +246,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
 overlap_notes = 2 #@param {type:"slider", min:0, max:10, step:1}
-slices_match_type = "pitches_and_durations" #@param ["pitches_only", "pitches_and_durations", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
+slices_match_type = "pitches_and_beat" #@param ["pitches_only", "pitches_and_durations", "pitches_and_beat", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
 
 print('=' * 70)
 print('Endless Piano')
@@ -279,7 +279,7 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
     d1 = [int(y[2] / 128) for y in song[-1][-overlap_notes:]]
     ch1 = [int(y[3]) for y in song[-1][-overlap_notes:]]
     v1 = [int(y[5]) for y in song[-1][-overlap_notes:]]
-    dt1 = [int(y[1]) for y in song[-1][-overlap_notes:]]
+    dt1 = [int(y[1] / 128) for y in song[-1][-overlap_notes:]]
 
     for qp in quarter_pairs:
 
@@ -287,7 +287,7 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
           d2 = [int(y[2] / 128) for y in qp[:overlap_notes]]
           v2 = [int(y[5]) for y in qp[:overlap_notes]]
           ch2 = [int(y[3]) for y in qp[:overlap_notes]]
-          dt2 = [int(y[1]) for y in qp[:overlap_notes]]
+          dt2 = [int(y[1] / 128) for y in qp[:overlap_notes]]
           
           try:
             dtd1 = abs(dt1[0] - dt1[1])
@@ -313,7 +313,16 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                 print('Found', c, 'slices /', total_notes, 'notes...')
                 c += 1
                 break
-          
+
+          if slices_match_type == 'pitches_and_beat':
+            if p1 == p2 and dtd1 == dtd2:
+              if qp[overlap_notes:] not in song:            
+                song.append(qp[overlap_notes:])
+                total_notes += len(song[-1])
+                print('Found', c, 'slices /', total_notes, 'notes...')
+                c += 1
+                break
+
           if slices_match_type == 'pitches_durations_and_velocities':
             if p1 == p2 and d1 == d2 and v1 == v2:
               if qp[overlap_notes:] not in song:            
