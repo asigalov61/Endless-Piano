@@ -36,6 +36,7 @@ print('Loading needed modules. Please wait...')
 import os
 import copy
 
+import tqdm
 from tqdm import auto
 
 import secrets
@@ -44,14 +45,8 @@ import random
 if not os.path.exists('/content/Dataset'):
     os.makedirs('/content/Dataset')
 
-if not os.path.exists('/content/Output'):
-    os.makedirs('/content/Output')
-
 os.chdir('/content/tegridy-tools/tegridy-tools')
 import TMIDI
-
-import tqdm
-from tqdm import auto
 
 os.chdir('/content/')
 print('Loading complete. Enjoy! :)')
@@ -269,6 +264,8 @@ print('Starting search...')
 print('=' * 70)
 
 c = 2
+total_notes = 0
+
 idx = secrets.randbelow(len(quarter_pairs))
 song = []
 song.append(quarter_pairs[idx])
@@ -302,9 +299,9 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
           if slices_match_type == 'pitches_only':
             if p1 == p2:
               if qp[overlap_notes:] not in song:            
-                
                 song.append(qp[overlap_notes:])
-                print('Found', c, 'slices...')
+                total_notes += len(song[-1])
+                print('Found', c, 'slices /', total_notes, 'notes...')
                 c += 1
                 break
           
@@ -312,7 +309,8 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
             if p1 == p2 and d1 == d2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
-                print('Found', c, 'slices...')
+                total_notes += len(song[-1])
+                print('Found', c, 'slices /', total_notes, 'notes...')
                 c += 1
                 break
           
@@ -320,7 +318,8 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
             if p1 == p2 and d1 == d2 and v1 == v2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
-                print('Found', c, 'slices...')
+                total_notes += len(song[-1])
+                print('Found', c, 'slices /', total_notes, 'notes...')
                 c += 1
                 break
 
@@ -328,7 +327,8 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
             if p1 == p2 and d1 == d2 and v1 == v2 and dtd1 == dtd2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
-                print('Found', c, 'slices...')
+                total_notes += len(song[-1])
+                print('Found', c, 'slices /', total_notes, 'notes...')
                 c += 1
                 break
 
@@ -336,7 +336,8 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
             if p1 == p2 and d1 == d2 and v1 == v2 and dtd1 == dtd2 and ch1 == ch2:
               if qp[overlap_notes:] not in song:            
                 song.append(qp[overlap_notes:])
-                print('Found', c, 'slices...')
+                total_notes += len(song[-1])
+                print('Found', c, 'slices /', total_notes, 'notes...')
                 c += 1
                 break
 
