@@ -70,7 +70,7 @@ print('Loading complete. Enjoy! :)')
 
 #@markdown NOTE: This may take a while. Please wait...
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
-overlap_notes_per_slice = 3 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes_per_slice = 2 #@param {type:"slider", min:0, max:10, step:1}
 
 print('=' * 50) 
 print('Loading GiantMIDI...')
@@ -108,7 +108,7 @@ melody_pitch_baseline = 60 #@param {type:"slider", min:1, max:127, step:1}
 time_denominator = 1 #@param {type:"slider", min:1, max:20, step:1}
 chars_encoding_offset = 33 #@param {type:"number"}
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
-overlap_notes_per_slice = 3 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes_per_slice = 2 #@param {type:"slider", min:0, max:10, step:1}
 
 print('TMIDI Processor')
 print('Starting up...')
@@ -259,7 +259,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@markdown NOTE: Broader slices match types == slower/more plagiarized output, so you will need to find just the right settings for your dataset and output preferences.
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
-overlap_notes = 3 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes = 2 #@param {type:"slider", min:0, max:10, step:1}
 slices_match_type = "pitches_durations_and_velocities" #@param ["pitches_only", "pitches_and_durations", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
 
 print('=' * 70)
@@ -282,6 +282,8 @@ idx = secrets.randbelow(len(quarter_pairs))
 song = []
 song.append(quarter_pairs[idx])
 
+print('Starting slice index:', idx, 'out of', len(quarter_pairs))
+print('=' * 70)
 
 for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
   try:  
