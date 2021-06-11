@@ -240,7 +240,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 
 #@markdown NOTE: If nothing is being generated or if the song is too short: re-run the generator.
 
-#@markdown NOTE: Generator's overlap notes count must match dataset overlap notes count
+#@markdown NOTE: Generator's overlap notes count must match dataset overlap notes count.
 
 #@markdown NOTE: Broader slices match types == slower/more plagiarized output, so you will need to find just the right settings for your dataset and output preferences.
 
@@ -438,7 +438,7 @@ pm = pretty_midi.PrettyMIDI(fname + '.mid')
 piano_roll = pm.get_piano_roll()
 
 plt.figure(figsize=(14, 5))
-librosa.display.specshow(piano_roll, x_axis='time', y_axis='cqt_note', sr=64000, cmap=plt.cm.hot)
+librosa.display.specshow(piano_roll, x_axis='time', y_axis='cqt_note', fmin=1, hop_length=128, sr=16000, cmap=plt.cm.hot)
 plt.title('Composition: ' + fn1)
 
 FluidSynth("/usr/share/sounds/sf2/FluidR3_GM.sf2", 16000).midi_to_audio(str(fname + '.mid'), str(fname + '.wav'))
