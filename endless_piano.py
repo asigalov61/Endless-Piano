@@ -250,6 +250,12 @@ print('=' * 70)
 print('Endless Piano')
 print('=' * 70)
 
+print('Starting up...')
+print('=' * 70)
+
+print('Reading the dataset...')
+print('=' * 70)
+
 print('Number of MIDI compositions in the dataset:', len(quarter_pairs1[0]))
 print('Number of compositions scores slices in the dataset:', len(quarter_pairs))
 print('=' * 70)
@@ -258,7 +264,9 @@ print('Randomizing dataset scores slices...')
 random.shuffle(quarter_pairs)
 print('=' * 70)
 
-print('Starting search...')
+print('Starting main search...')
+print('=' * 70)
+
 print('Slices matching type:', slices_match_type)
 print('=' * 70)
 
@@ -453,7 +461,7 @@ pm = pretty_midi.PrettyMIDI(fname + '.mid')
 piano_roll = pm.get_piano_roll()
 
 plt.figure(figsize=(14, 5))
-librosa.display.specshow(piano_roll, x_axis='time', y_axis='cqt_note', fmin=1, hop_length=128, sr=16000, cmap=plt.cm.hot)
+librosa.display.specshow(piano_roll, x_axis='time', y_axis='cqt_note', fmin=1, hop_length=160, sr=16000, cmap=plt.cm.hot)
 plt.title('Composition: ' + fn1)
 
 FluidSynth("/usr/share/sounds/sf2/FluidR3_GM.sf2", 16000).midi_to_audio(str(fname + '.mid'), str(fname + '.wav'))
