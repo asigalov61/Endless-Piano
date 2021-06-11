@@ -70,7 +70,7 @@ print('Loading complete. Enjoy! :)')
 
 #@markdown NOTE: This may take a while. Please wait...
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
-overlap_notes_per_slice = 5 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes_per_slice = 4 #@param {type:"slider", min:0, max:10, step:1}
 
 print('=' * 50) 
 print('Loading GiantMIDI...')
@@ -108,7 +108,7 @@ melody_pitch_baseline = 60 #@param {type:"slider", min:1, max:127, step:1}
 time_denominator = 1 #@param {type:"slider", min:1, max:20, step:1}
 chars_encoding_offset = 33 #@param {type:"number"}
 slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
-overlap_notes_per_slice = 5 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes_per_slice = 4 #@param {type:"slider", min:0, max:10, step:1}
 
 print('TMIDI Processor')
 print('Starting up...')
@@ -257,11 +257,15 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@markdown NOTE: Overlap notes count should match dataset overlap notes count
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
-overlap_notes = 5 #@param {type:"slider", min:0, max:10, step:1}
+overlap_notes = 4 #@param {type:"slider", min:0, max:10, step:1}
 slices_match_type = "pitches_durations_and_velocities" #@param ["pitches_only", "pitches_and_durations", "pitches_durations_and_velocities"]
 
 print('=' * 100)
 print('Endless Piano')
+print('=' * 100)
+
+print('Randomizing Score Slices...')
+random.shuffle(quarter_pairs)
 print('=' * 100)
 
 print('Starting search...')
