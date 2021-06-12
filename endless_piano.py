@@ -141,7 +141,50 @@ print('=' * 70)
 print('Processing finished! Enjoy! :)')
 print('=' * 70)
 
-"""# (OPTIONAL) Process your own dataset"""
+"""# (ALTERNATIVE) Download and load preprocessed MAESTRO 3.0 dataset"""
+
+# Commented out IPython magic to ensure Python compatibility.
+#@title Download processed MAESTRO 3.0 dataset
+# %cd /content/
+!wget --no-check-certificate -O MAESTRO3.zip "https://onedrive.live.com/download?cid=8A0D502FC99C608F&resid=8A0D502FC99C608F%2118492&authkey=APgohbotB54fmeE"
+!unzip -j MAESTRO3.zip
+
+#@title Load MAESTRO 3.0 dataset
+
+#@markdown NOTE: This may take a while. Please wait...
+slices_length_in_miliseconds = 4000 #@param {type:"slider", min:1000, max:8000, step:1000}
+overlap_notes_per_slice = 2 #@param {type:"slider", min:0, max:10, step:1}
+
+print('=' * 70) 
+print('Loading MAESTRO 3.0 Dataset. Please wait...')
+print('=' * 70) 
+quarter_pairs1 = TMIDI.Tegridy_Any_Pickle_File_Loader('/content/Endless-Piano-Music-Dataset-2')
+print('=' * 70)
+
+print('Randomizing the dataset...')
+random.shuffle(quarter_pairs1[0])
+print('=' * 70)
+
+print('Slicing the dataset...')
+quarter_pairs = []
+for qp in auto.tqdm(quarter_pairs1[0]):
+  quarter_pairs.extend(TMIDI.Tegridy_Score_Slicer(qp, slices_length_in_miliseconds, overlap_notes=overlap_notes_per_slice)[0])
+print('=' * 70)
+
+print('Randomizing the score slices...')
+random.shuffle(quarter_pairs)
+print('=' * 70)
+
+print('Generating score slices music features signatures...')
+signatures = []
+for qp in auto.tqdm(quarter_pairs):
+  signatures.append(TMIDI.Tegridy_Chords_List_Music_Features(qp, st_dur_div=16, pitch_div=2, vel_div=2)) #st_dur_div=32, pitch_div=4, vel_div=4))
+print('=' * 70)
+
+print('Processing finished! Enjoy! :)')
+print('=' * 70)
+
+"""# (CUSTOM) Process your own dataset"""
 
 #@title Process MIDIs to special MIDI dataset with Optimus MIDI Processor
 
