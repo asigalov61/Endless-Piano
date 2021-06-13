@@ -378,9 +378,9 @@ print('=' * 70)
 c = 2
 total_notes = 0
 
-ap = 6
+ap = 4
 atds = 50
-ad = 500
+ad = 100
 av = 8
 
 ###########
