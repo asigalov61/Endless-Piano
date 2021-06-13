@@ -378,10 +378,10 @@ print('=' * 70)
 c = 2
 total_notes = 0
 
-ap = 6
+ap = 3
 atds = 10
-ad = 100
-av = 30
+ad = 10
+av = 10
 
 ###########
 
@@ -397,10 +397,10 @@ print('=' * 70)
 
 for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
   try:
-    p1 = [y[4] for y in song[-1][-overlap_notes:]]
-    d1 = [int(y[2] / ad) for y in song[-1][-overlap_notes:]]
-    ch1 = [int(y[3]) for y in song[-1][-overlap_notes:]]
-    v1 = [int(y[5] / av) for y in song[-1][-overlap_notes:]]
+    p1 = int(sum([y[4] for y in song[0]]) / len(song[0]))
+    d1 = int(sum([int(y[2] / ad) for y in song[0]]) / len(song[0]))
+    ch1 = int(sum([int(y[3]) for y in song[0]]) / len(song[0]))
+    v1 = int(sum([int(y[5] / av) for y in song[0]]) / len(song[0]))
     
     tds1 = [int(abs(song[0][i-1][1]-song[0][i][1]) / 1) for i in range(1, len(song[0]))]
     if len(tds1) != 0: atds1 = int(sum(tds1) / len(tds1))
@@ -409,12 +409,12 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
 
     for qp in quarter_pairs:
 
-          p2 = [y[4] for y in qp[:overlap_notes]]
-          d2 = [int(y[2] / ad) for y in qp[:overlap_notes]]
-          v2 = [int(y[5] / av) for y in qp[:overlap_notes]]
-          ch2 = [int(y[3]) for y in qp[:overlap_notes]]
+          p2 = int(sum([y[4] for y in qp]) / len(qp))
+          d2 = int(sum([int(y[2] / ad) for y in qp]) / len(qp))
+          v2 = int(sum([int(y[5] / av) for y in qp]) / len(qp))
+          ch2 = int(sum([int(y[3]) for y in qp]) / len(qp))
           
-          tds2 = [int(abs(qp[overlap_notes:][i-1][1]-qp[overlap_notes:][i][1]) / 1) for i in range(1, len(qp[overlap_notes:]))]
+          tds2 = [int(abs(qp[i-1][1]-qp[i][1]) / 1) for i in range(1, len(qp))]
           if len(tds2) != 0: atds2 = int(sum(tds2) / len(tds2))
 
           if len(qp) != 0: ap2 = int(sum([y[4] for y in qp]) / len(qp))
