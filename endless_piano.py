@@ -380,7 +380,7 @@ total_notes = 0
 
 ap = 3
 atds = 10
-ad = 10
+ad = 100
 av = 10
 
 ###########
@@ -475,23 +475,25 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                 break
           
           if slices_match_type == 'pitches_durations_velocities_and_beat':
-            if p1 == p2 and abs(ap1 - ap2) < ap and d1 == d2 and v1 == v2 and abs(atds1 - atds2) < atds:
-              if qp[overlap_notes:] not in song:            
-                song.append(qp[overlap_notes:])
-                total_notes += len(song[-1])
-                print('Found', c, 'slices /', total_notes, 'notes...')
-                c += 1
-                break
-
-          if slices_match_type == 'pitches_durations_velocities_beat_and_channel':
-            if p1 == p2  and abs(ap1 - ap2) < ap and d1 == d2 and v1 == v2 and ch1 == ch2:
-              if abs(atds1 - atds2) < atds:
+            if p1 == p2 and v1 == v2 and d1 == d2:
+              if abs(ap1 - ap2) < ap and abs(atds1 - atds2) < atds:
                 if qp[overlap_notes:] not in song:            
                   song.append(qp[overlap_notes:])
                   total_notes += len(song[-1])
                   print('Found', c, 'slices /', total_notes, 'notes...')
                   c += 1
                   break
+
+          if slices_match_type == 'pitches_durations_velocities_beat_and_channel':
+            if p1 == p2 and d1 == d2 and v1 == v2 and ch1 == ch2: 
+              if abs(ap1 - ap2) < ap:
+                if abs(atds1 - atds2) < atds:
+                  if qp[overlap_notes:] not in song:            
+                    song.append(qp[overlap_notes:])
+                    total_notes += len(song[-1])
+                    print('Found', c, 'slices /', total_notes, 'notes...')
+                    c += 1
+                    break
 
     if c == i + 1:
       print('=' * 70)
