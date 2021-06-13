@@ -356,7 +356,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@markdown NOTE: Broader slices match types == slower/more plagiarized output, so you will need to find just the right settings for your dataset and output preferences.
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
-slices_match_type = "pitches_beat_and_velocities" #@param ["pitches_only", "pitches_and_durations", "pitches_and_beat", "pitches_beat_and_velocities", "pitches_durations_and_beat", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
+slices_match_type = "pitches_durations_velocities_beat_and_channel" #@param ["pitches_only", "pitches_and_durations", "pitches_and_beat", "pitches_beat_and_velocities", "pitches_durations_and_beat", "pitches_durations_and_velocities", "pitches_durations_velocities_and_beat", "pitches_durations_velocities_beat_and_channel"]
 overlap_notes = overlap_notes_per_slice
 
 print('=' * 70)
@@ -571,7 +571,7 @@ if c >= i + 1:
 #@markdown NOTE: Do not be afraid to adjust the fuzz matching threshold as it is dataset dependent
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
-slices_fuzz_matching_threshold = 90 #@param {type:"slider", min:70, max:100, step:1}
+slices_fuzz_matching_threshold = 85 #@param {type:"slider", min:70, max:100, step:1}
 
 overlap_notes = overlap_notes_per_slice
 
@@ -611,14 +611,15 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
   try:
     for s in signatures:
      
-      if fuzz.ratio(sig[6:11], s[6:11]) >= slices_fuzz_matching_threshold and signatures.index(s) != signatures.index(sig):
-        if quarter_pairs[signatures.index(s)][overlap_notes_per_slice:] not in song:
-          song.append(quarter_pairs[signatures.index(s)][overlap_notes_per_slice:])
-          sig = signatures[signatures.index(s)]
-          total_notes += len(song[-1])
-          print('Found', c, 'slices /', total_notes, 'notes...')
-          c += 1
-          break
+      if fuzz.ratio(sig[1:6], s[1:6]) >= slices_fuzz_matching_threshold and signatures.index(s) != signatures.index(sig):
+        if fuzz.ratio(sig[6:11], s[6:11]) >= slices_fuzz_matching_threshold:
+          if quarter_pairs[signatures.index(s)][overlap_notes_per_slice:] not in song:
+            song.append(quarter_pairs[signatures.index(s)][overlap_notes_per_slice:])
+            sig = signatures[signatures.index(s)]
+            total_notes += len(song[-1])
+            print('Found', c, 'slices /', total_notes, 'notes...')
+            c += 1
+            break
     
     if c == i + 1:
       print('=' * 70)
