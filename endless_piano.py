@@ -397,15 +397,15 @@ print('=' * 70)
 
 for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
   try:
-    p1 = int(sum([y[4] for y in song[0]]) / len(song[0]))
-    d1 = int(sum([int(y[2] / ad) for y in song[0]]) / len(song[0]))
-    ch1 = int(sum([int(y[3]) for y in song[0]]) / len(song[0]))
-    v1 = int(sum([int(y[5] / av) for y in song[0]]) / len(song[0]))
+    p1 = int(sum([y[4] for y in song[-1]]) / len(song[-1]))
+    d1 = int(sum([int(y[2] / ad) for y in song[-1]]) / len(song[-1]))
+    ch1 = int(sum([int(y[3]) for y in song[-1]]) / len(song[-1]))
+    v1 = int(sum([int(y[5] / av) for y in song[-1]]) / len(song[-1]))
     
-    tds1 = [int(abs(song[0][i-1][1]-song[0][i][1]) / 1) for i in range(1, len(song[0]))]
+    tds1 = [int(abs(song[-1][i-1][1]-song[-1][i][1]) / 1) for i in range(1, len(song[-1]))]
     if len(tds1) != 0: atds1 = int(sum(tds1) / len(tds1))
     
-    if len(song[0]) != 0: ap1 = int(sum([y[4] for y in song[0]]) / len(song[0]))
+    if len(song[-1]) != 0: ap1 = int(sum([y[4] for y in song[-1]]) / len(song[-1]))
 
     for qp in quarter_pairs:
 
