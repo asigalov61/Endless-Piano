@@ -82,7 +82,7 @@ random.shuffle(quarter_pairs1[0])
 print('=' * 70)
 
 print('Slicing the dataset...')
-quarter_pairs2 = []
+quarter_pairs = []
 for qp in auto.tqdm(quarter_pairs1[0]):
   quarter_pairs.extend(TMIDI.Tegridy_Score_Slicer(qp, slices_length_in_miliseconds, overlap_notes=overlap_notes_per_slice)[0])
 print('=' * 70)
