@@ -447,13 +447,33 @@ print('=' * 70)
 
 if c >= i + 1:
 
-  print('Finalizing resulting song...')
+  print('Finalizing generated song...')
   print('=' * 70)
   song1 = []
   for s in song:
     song1.extend(s)
   song1 = [s for s in song1 if type(s) == list]
+  print('=' * 70)
 
+  print('Final song stats...')
+  sig1 = TMIDI.Optimus_Signature(song1)[1] # [1] == Best Optimus Signature
+  
+  # Decoding sig...
+  p1mh = sig1[0] # PMedH
+  p1m = sig1[1] # PMed
+  p1ml = sig1[2] # PMedL
+  d1 = sig1[3] # Duration
+  v1 = sig1[4] # Velocity
+  mtds1 = sig1[5] # Beat
+
+  print('Song PMH:', p1mh)
+  print('Song PM:', p1m)
+  print('Song PML:', p1ml)
+  print('Song DUR:', d1)
+  print('Song VEL:', v1)
+  print('Song BT:', mtds1)
+  print('=' * 70)
+  
   print('Analyzing generated song...')
   ptime = 0
   count = 1
