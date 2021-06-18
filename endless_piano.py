@@ -184,12 +184,6 @@ print('Randomizing the score slices...')
 random.shuffle(quarter_pairs)
 print('=' * 70)
 
-print('Generating score slices music features signatures...')
-signatures = []
-for qp in auto.tqdm(quarter_pairs):
-  signatures.append(TMIDI.Tegridy_Chords_List_Music_Features(qp))
-print('=' * 70)
-
 print('Processing finished! Enjoy! :)')
 print('=' * 70)
 
