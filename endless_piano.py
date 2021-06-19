@@ -350,7 +350,7 @@ TMIDI.Tegridy_Pickle_File_Writer(MusicDataset, file_name_to_output_dataset_to)
 #@markdown NOTE: Yes, it is slow and yes, you may need to re-run many times before you will generate anything decent. This is the real price of the present generative music.
 
 number_of_slices_to_try_to_generate = 20 #@param {type:"slider", min:1, max:100, step:1}
-slow_extra_match = "velocities_and_minkowski" #@param ["velocities", "velocities_and_minkowski"]
+slow_extra_match = "minkowski" #@param ["velocities", "minkowski"]
 
 print('=' * 70)
 print('Endless Piano')
@@ -424,19 +424,18 @@ for i in auto.tqdm(range(number_of_slices_to_try_to_generate)):
                     c += 1
                     break
         
-        # velocities and minkowski
+        # minkowski
         else:
           if p1m == p2m and p1mh == p2mh and p1ml == p2ml:      
             if d1 == d2:
               if mtds1 == mtds2:
-                #if v1 == v2:
-                  if distance.minkowski(sig1, sig2) < 5:
-                    if qp not in song:            
-                      song.append(qp)
-                      total_notes += len(song[-1])
-                      print('Found', c, 'slices /', total_notes, 'notes...')
-                      c += 1
-                      break
+                if distance.minkowski(sig1, sig2) < 2:
+                  if qp not in song:            
+                    song.append(qp)
+                    total_notes += len(song[-1])
+                    print('Found', c, 'slices /', total_notes, 'notes...')
+                    c += 1
+                    break
 
     if c == i + 1:
       print('=' * 70)
